@@ -1,5 +1,6 @@
 package com.geekbrains.spring.web.core.controllers;
 
+import com.geekbrains.spring.web.core.entities.OrderStatus;
 import com.geekbrains.spring.web.core.services.OrderService;
 import com.geekbrains.spring.web.core.services.PayPalService;
 import com.paypal.core.PayPalHttpClient;
@@ -9,6 +10,8 @@ import com.paypal.orders.OrderRequest;
 import com.paypal.orders.OrdersCaptureRequest;
 import com.paypal.orders.OrdersCreateRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,6 +25,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/api/v1/paypal")
 @RequiredArgsConstructor
+@Slf4j
 public class PayPalController {
     private final PayPalHttpClient payPalClient;
     private final OrderService orderService;
@@ -29,11 +33,17 @@ public class PayPalController {
 
     @PostMapping("/create/{orderId}")
     public ResponseEntity<?> createOrder(@PathVariable Long orderId) throws IOException {
-        OrdersCreateRequest request = new OrdersCreateRequest();
-        request.prefer("return=representation");
-        request.requestBody(payPalService.createOrderRequest(orderId));
-        HttpResponse<Order> response = payPalClient.execute(request);
-        return new ResponseEntity<>(response.result().id(), HttpStatus.valueOf(response.statusCode()));
+        Optional<com.geekbrains.spring.web.core.entities.Order> orderOptional = orderService.findById(orderId);
+        if (orderOptional.isPresent() && orderOptional.get().getOrderStatus().equals(OrderStatus.CREATED)) {
+            OrdersCreateRequest request = new OrdersCreateRequest();
+            request.prefer("return=representation");
+            request.requestBody(payPalService.createOrderRequest(orderId));
+            HttpResponse<Order> response = payPalClient.execute(request);
+            log.info("Возвращаем createOrder из PayPalController" + response.result().id());
+            return new ResponseEntity<>(response.result().id(), HttpStatus.valueOf(response.statusCode()));
+
+        }
+        return new ResponseEntity<>("Заказ уже оплачен или отменен", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/capture/{payPalId}")
@@ -45,10 +55,7 @@ public class PayPalController {
         Order payPalOrder = response.result();
         if ("COMPLETED".equals(payPalOrder.status())) {
             long orderId = Long.parseLong(payPalOrder.purchaseUnits().get(0).referenceId());
-            // Optional<com.geekbrains.spring.web.core.entities.Order> orderOptional = orderService.findById(orderId);
-
-
-
+             orderService.changeStatus(OrderStatus.PAIDED,orderId);
             return new ResponseEntity<>("Order completed!", HttpStatus.valueOf(response.statusCode()));
         }
         return new ResponseEntity<>(payPalOrder, HttpStatus.valueOf(response.statusCode()));

@@ -27,9 +27,27 @@
     <p></p>
     <h3>Детали заказа</h3>
     <form novalidate>
+        <input class="form-control" type="text" placeholder="Имя пользователя" ng-model="orderDetails.username">
+        <p></p>
+        <input class="form-control" type="text" placeholder="Имя получателя" ng-model="orderDetails.name">
+        <p></p>
+        <input class="form-control" type="text" placeholder="Фамилия получателя" ng-model="orderDetails.surname">
+        <p></p>
         <input class="form-control" type="text" placeholder="Номер телефона получателя" ng-model="orderDetails.phone">
         <p></p>
-        <input class="form-control" type="text" placeholder="Адрес доставки" ng-model="orderDetails.address">
+        <input class="form-control" type="text" placeholder="Адрес доставки (Улица)" ng-model="orderDetails.street">
+        <p></p>
+        <input class="form-control" type="text" placeholder="Адрес доставки (Дом)" ng-model="orderDetails.house">
+        <p></p>
+        <input class="form-control" type="text" placeholder="Адрес доставки (Квартира)" ng-model="orderDetails.flat">
+        <p></p>
+        <input class="form-control" type="text" placeholder="Адрес доставки (Город)" ng-model="orderDetails.city">
+        <p></p>
+        <input class="form-control" type="text" placeholder="Адрес доставки (Район)" ng-model="orderDetails.district">
+        <p></p>
+        <input class="form-control" type="text" placeholder="Адрес доставки (Индекс)" ng-model="orderDetails.postalCode">
+        <p></p>
+        <input class="form-control" type="text" placeholder="Адрес доставки (Страна)" ng-model="orderDetails.countryCode">
         <p></p>
     </form>
 

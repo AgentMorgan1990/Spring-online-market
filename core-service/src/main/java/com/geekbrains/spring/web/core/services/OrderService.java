@@ -5,9 +5,12 @@ import com.geekbrains.spring.web.api.exceptions.ResourceNotFoundException;
 import com.geekbrains.spring.web.api.core.OrderDetailsDto;
 import com.geekbrains.spring.web.core.entities.Order;
 import com.geekbrains.spring.web.core.entities.OrderItem;
+import com.geekbrains.spring.web.core.entities.OrderStatus;
 import com.geekbrains.spring.web.core.integrations.CartServiceIntegration;
 import com.geekbrains.spring.web.core.repositories.OrdersRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +20,9 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OrderService {
+@Slf4j
+public class
+OrderService {
     private final OrdersRepository ordersRepository;
     private final CartServiceIntegration cartServiceIntegration;
     private final ProductsService productsService;
@@ -26,7 +31,16 @@ public class OrderService {
     public void createOrder(String username, OrderDetailsDto orderDetailsDto) {
         CartDto currentCart = cartServiceIntegration.getUserCart(username);
         Order order = new Order();
-        order.setAddress(orderDetailsDto.getAddress());
+        order.setOrderStatus(OrderStatus.CREATED);
+        order.setCity(orderDetailsDto.getCity());
+        order.setCountryCode(orderDetailsDto.getCountryCode());
+        order.setFlat(orderDetailsDto.getFlat());
+        order.setStreet(orderDetailsDto.getStreet());
+        order.setHouse(orderDetailsDto.getHouse());
+        order.setName(orderDetailsDto.getName());
+        order.setSurname(orderDetailsDto.getSurname());
+        order.setDistrict(orderDetailsDto.getDistrict());
+        order.setPostalCode(orderDetailsDto.getPostalCode());
         order.setPhone(orderDetailsDto.getPhone());
         order.setUsername(username);
         order.setTotalPrice(currentCart.getTotalPrice());
@@ -51,5 +65,11 @@ public class OrderService {
 
     public Optional<Order> findById(Long id) {
         return ordersRepository.findById(id);
+    }
+
+    public Order changeStatus(OrderStatus orderStatus,Long id){
+       Order order = ordersRepository.findById(id).get();
+       order.setOrderStatus(orderStatus);
+        return ordersRepository.save(order);
     }
 }
