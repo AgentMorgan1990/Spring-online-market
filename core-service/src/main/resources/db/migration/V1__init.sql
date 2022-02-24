@@ -22,13 +22,23 @@ values ('Milk', 100.20),
 
 create table orders
 (
-    id          bigserial primary key,
-    username    varchar(255)  not null,
-    total_price numeric(8, 2)  not null,
-    address     varchar(255),
-    phone       varchar(255),
-    created_at  timestamp default current_timestamp,
-    updated_at  timestamp default current_timestamp
+    id           bigserial primary key,
+    username     varchar(255)  not null,
+    name         varchar(255),
+    surname      varchar(255),
+    total_price  numeric(8, 2) not null,
+    order_status varchar(255)  not null,
+    address      varchar(255),
+    street       varchar(255),
+    house        varchar(255),
+    flat         varchar(255),
+    city         varchar(255),
+    postal_code  varchar(255),
+    phone        varchar(255),
+    country_code varchar(255),
+    district  varchar(255),
+    created_at   timestamp default current_timestamp,
+    updated_at   timestamp default current_timestamp
 );
 
 create table order_items
@@ -43,11 +53,16 @@ create table order_items
     updated_at        timestamp default current_timestamp
 );
 
-insert into orders (username, total_price, address, phone)
-values ('bob', 200.00, 'address', '12345');
+insert into orders (username, total_price,order_status, address, phone,surname, name,street,house,flat,city,
+                    postal_code,country_code,district)
+values ('bob', 200.00,1,'Адрес_1', '12345','Иванов','Иван','Ленина','15','24','Норильск','190086','RUS','Норильская ' ||
+                                                                                                        'область'),
+       ('bob', 200.00,2,'Адрес_2', '12345','Иванов','Иван','Ленина','15','24','Норильск','190086','US','Норильская ' ||
+                                                                                                       'область');
 
 insert into order_items (product_id, order_id, quantity, price_per_product, price)
-values (1, 1, 2, 100.00, 200.00);
+values (1, 1, 2, 100.00, 200.00),
+       (1, 2, 2, 100.00, 200.00);
 
 
 

@@ -25,6 +25,12 @@ public class Order {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "surname")
+    private String surname;
+
     @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<OrderItem> items;
 
@@ -34,8 +40,32 @@ public class Order {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "street")
+    private String street;
+
+    @Column(name = "house")
+    private String house;
+
+    @Column(name = "flat")
+    private String flat;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "district")
+    private String district;
+
+    @Column(name = "postal_code")
+    private String postalCode;
+
+    @Column(name = "country_code")
+    private String countryCode;
+
     @Column(name = "phone")
     private String phone;
+
+    @Column(name = "order_status")
+    private OrderStatus orderStatus;
 
     @CreationTimestamp
     @Column(name = "created_at")
