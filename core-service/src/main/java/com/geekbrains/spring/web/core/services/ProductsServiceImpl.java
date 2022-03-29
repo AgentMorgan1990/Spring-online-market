@@ -16,7 +16,8 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ProductsService {
+public class ProductsServiceImpl implements ProductService{
+
     private final ProductsRepository productsRepository;
 
     public Page<Product> findAll(Integer minPrice, Integer maxPrice, String partTitle, Integer page) {
