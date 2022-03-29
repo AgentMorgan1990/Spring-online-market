@@ -1,11 +1,10 @@
 package com.geekbrains.spring.web.core.controllers;
 
-import com.geekbrains.spring.web.api.exceptions.CartServiceAppError;
 import com.geekbrains.spring.web.api.exceptions.ResourceNotFoundException;
 import com.geekbrains.spring.web.core.converters.ProductConverter;
 import com.geekbrains.spring.web.api.core.ProductDto;
 import com.geekbrains.spring.web.core.entities.Product;
-import com.geekbrains.spring.web.core.services.ProductsService;
+import com.geekbrains.spring.web.core.services.ProxyProductServiceImpl;
 import com.geekbrains.spring.web.core.validators.ProductValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "Продукты", description = "Методы работы с продуктами")
 public class ProductsController {
-    private final ProductsService productsService;
+    private final ProxyProductServiceImpl productsService;
     private final ProductConverter productConverter;
     private final ProductValidator productValidator;
 

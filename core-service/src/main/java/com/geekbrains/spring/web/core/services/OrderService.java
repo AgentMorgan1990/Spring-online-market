@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final OrdersRepository ordersRepository;
     private final CartServiceIntegration cartServiceIntegration;
-    private final ProductsService productsService;
+    private final ProxyProductServiceImpl productsService;
 
     @Transactional
     public void createOrder(String username, OrderDetailsDto orderDetailsDto) {
