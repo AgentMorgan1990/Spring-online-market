@@ -13,11 +13,35 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 @Service
-@RequiredArgsConstructor
 public class ProductsService {
+
+    private String news;
+
     private final ProductsRepository productsRepository;
+
+    private PropertyChangeSupport support;
+
+    public ProductsService(ProductsRepository productsRepository) {
+        this.productsRepository = productsRepository;
+        support = new PropertyChangeSupport(this);
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+        support.addPropertyChangeListener(pcl);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
+        support.removePropertyChangeListener(pcl);
+    }
+
+    public void setNews(String value) {
+        support.firePropertyChange("news", this.news, value);
+        this.news = value;
+    }
 
     public Page<Product> findAll(Integer minPrice, Integer maxPrice, String partTitle, Integer page) {
         Specification<Product> spec = Specification.where(null);
@@ -53,4 +77,5 @@ public class ProductsService {
         product.setTitle(productDto.getTitle());
         return product;
     }
+
 }

@@ -1,10 +1,13 @@
 package com.geekbrains.spring.web.core.controllers;
 
+import java.beans.PropertyChangeListener;
+
 import com.geekbrains.spring.web.api.exceptions.CartServiceAppError;
 import com.geekbrains.spring.web.api.exceptions.ResourceNotFoundException;
 import com.geekbrains.spring.web.core.converters.ProductConverter;
 import com.geekbrains.spring.web.api.core.ProductDto;
 import com.geekbrains.spring.web.core.entities.Product;
+import com.geekbrains.spring.web.core.services.HistoryData;
 import com.geekbrains.spring.web.core.services.ProductsService;
 import com.geekbrains.spring.web.core.validators.ProductValidator;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,7 +75,15 @@ public class ProductsController {
         productValidator.validate(productDto);
         Product product = productConverter.dtoToEntity(productDto);
         product = productsService.save(product);
+        productsService.setNews("Добавлен новый продукт: " + product.getTitle());
         return productConverter.entityToDto(product);
+    }
+
+    @GetMapping("/subscribe/{name}")
+    public  String subscribe(@PathVariable String name){
+        PropertyChangeListener pcl = new HistoryData(name);
+        productsService.addPropertyChangeListener(pcl);
+        return pcl.toString();
     }
 
     @PutMapping
